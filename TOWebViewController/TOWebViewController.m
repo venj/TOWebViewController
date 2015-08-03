@@ -440,9 +440,18 @@ static const float kAfterInteractiveMaxProgressValue    = 0.9f;
     //create the buttons view and add them to either the navigation bar or toolbar
     self.buttonsContainerView = [self containerViewWithNavigationButtons];
     if (IPAD) {
-        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:self.buttonsContainerView];
+        UIBarButtonItem *webNavigationBarItem = [[UIBarButtonItem alloc] initWithCustomView:self.buttonsContainerView];
+        if (self.showAdditionalBarButtonItems && [self.additionalBarButtonItems count] > 0) {
+            self.navigationItem.rightBarButtonItems =  [self.additionalBarButtonItems arrayByAddingObject:webNavigationBarItem];
+        }
+        else {
+            self.navigationItem.rightBarButtonItem = webNavigationBarItem;
+        }
     }
     else {
+        if (self.showAdditionalBarButtonItems && [self.additionalBarButtonItems count] > 0) {
+            self.navigationItem.rightBarButtonItems = self.additionalBarButtonItems;
+        }
         NSArray *items = @[BLANK_BARBUTTONITEM, [[UIBarButtonItem alloc] initWithCustomView:self.buttonsContainerView], BLANK_BARBUTTONITEM];
         self.toolbarItems = items;
     }
