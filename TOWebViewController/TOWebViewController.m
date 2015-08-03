@@ -255,6 +255,7 @@ static const float kAfterInteractiveMaxProgressValue    = 0.9f;
     _showLoadingBar   = YES;
     _showUrlWhileLoading = YES;
     _showPageTitles   = YES;
+    _showAdditionalBarButtonItems = YES;
     
     //Set the initial default style as full screen (But this can be easily overridden)
     self.modalPresentationStyle = UIModalPresentationFullScreen;
