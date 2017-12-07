@@ -166,6 +166,8 @@
  */
 @property (nonatomic,assign)    BOOL showAdditionalBarButtonItems;
 
+@property (nonatomic,assign, getter=isPeeking) BOOL peeking;
+
 /**
  Add additional bar buttont items.
  */

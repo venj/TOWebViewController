@@ -90,7 +90,8 @@ static const float kAfterInteractiveMaxProgressValue    = 0.9f;
 @interface TOWebViewController () <UIActionSheetDelegate,
                                    UIPopoverControllerDelegate,
                                    MFMailComposeViewControllerDelegate,
-                                   MFMessageComposeViewControllerDelegate>
+                                   MFMessageComposeViewControllerDelegate,
+                                   CAAnimationDelegate>
 {
     
     //The state of the UIWebView's scroll view before the rotation animation has started
@@ -262,6 +263,7 @@ static const float kAfterInteractiveMaxProgressValue    = 0.9f;
     _showUrlWhileLoading = YES;
     _showPageTitles   = YES;
     _showAdditionalBarButtonItems = YES;
+    _peeking = NO;
     
     //Set the initial default style as full screen (But this can be easily overridden)
     self.modalPresentationStyle = UIModalPresentationFullScreen;
@@ -608,10 +610,15 @@ static const float kAfterInteractiveMaxProgressValue    = 0.9f;
 {
     // Check if we have a parent navigation controller, it's being presented modally,
     // and if it is, that we are its root view controller
-    if (self.navigationController && self.navigationController.presentingViewController)
+    if (self.navigationController && self.navigationController.presentingViewController) {
         return ([self.navigationController.viewControllers indexOfObject:self] == 0);
-    else // Check if we're being presented modally directly
+    }
+    else if ([self isPeeking]) {
+        return NO;
+    }
+    else { // Check if we're being presented modally directly
         return ([self presentingViewController] != nil);
+    }
 
     return NO;
 }
@@ -826,7 +833,7 @@ static const float kAfterInteractiveMaxProgressValue    = 0.9f;
     }
     else {
         if (self.beingPresentedModally) {
-            [self.presentingViewController dismissModalViewControllerAnimated:YES];
+            [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
         }
         else {
             [self.navigationController popViewControllerAnimated:YES];
@@ -836,7 +843,7 @@ static const float kAfterInteractiveMaxProgressValue    = 0.9f;
 
 - (void)close:(id)sender {
     if (self.beingPresentedModally) {
-        [self.presentingViewController dismissModalViewControllerAnimated:YES];
+        [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
     }
     else {
         [self.navigationController popViewControllerAnimated:YES];
@@ -1750,7 +1757,6 @@ static const float kAfterInteractiveMaxProgressValue    = 0.9f;
             [self animationDidStop:anim finished:YES];
             return;
         }
-        
         [self.webView.scrollView.layer removeAnimationForKey:@"bounds"];
         [anim setDelegate:self];
         [self.webView.scrollView.layer addAnimation:anim forKey:@"bounds"];
