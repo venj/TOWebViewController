@@ -823,7 +823,7 @@ static const float kAfterInteractiveMaxProgressValue    = 0.9f;
 }
 
 - (UIBarButtonItem *)closeButtonItem {
-    UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Close", @"Close") style:UIBarButtonItemStylePlain target:self action:@selector(close:)];
+    UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemStop target:self action:@selector(close:)];
     return item;
 }
 
